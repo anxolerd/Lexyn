@@ -5,7 +5,7 @@ module Error (
 
 import Text.Printf (printf)
 
-data Error = Error String Int
+data Error = Error String Int deriving Eq
 instance Show Error where
   show (Error msg pos) = printf "ERROR:%d:%s" pos msg
 
