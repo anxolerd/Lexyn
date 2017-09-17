@@ -1,5 +1,7 @@
 module SyntaxChecker (
-  check
+  check,
+  checkParenParity,
+  checkTokenOrder,
 ) where
 
 import Text.Printf (printf)
