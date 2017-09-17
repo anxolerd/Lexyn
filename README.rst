@@ -2,6 +2,9 @@
 Lexyn
 =====
 
+.. image:: https://travis-ci.org/anxolerd/Lexyn.svg?branch=master
+    :target: https://travis-ci.org/anxolerd/Lexyn
+
 Description
 ===========
 
