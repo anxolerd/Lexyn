@@ -79,8 +79,18 @@ word cs tokens = _tokenize cs' (TokVar pos name : tokens)
     name         = foldr ((:) . fst) "" name'
 
 number :: [(Char, Int)] -> [Token] -> [Error] -> ([Token], [Error])
-number cs tokens = _tokenize cs' (TokConst pos value : tokens)
-  where 
-    pos           = snd . head $ cs
-    (digits, cs') = span (\(x, _) -> isAlphaNum x || x == '.') cs
-    value         = read $ foldr ((:) . fst) "" digits 
+number cs tokens errors =
+  let (digits, cs') = span (\(x, _) -> isAlphaNum x || x == '.') cs in
+    if (fst . last) digits == '.' then
+      _tokenize cs' tokens
+                (Error (msgUnexpectedSymbol '.') (lastPos digits):errors)
+    else let decimalPoints = filter isPoint digits in
+      if length decimalPoints > 1 then
+        _tokenize cs' tokens
+                  (Error (msgUnexpectedSymbol '.') (lastPos decimalPoints):errors)
+      else let value = read $ foldr ((:) . fst) "" digits in
+        _tokenize cs' (TokConst pos value : tokens) errors
+  where
+    pos = (snd . head) cs
+    isPoint (x, _) = x == '.'
+    lastPos = snd . last

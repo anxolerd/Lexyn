@@ -13,6 +13,10 @@ main = hspec $ do
       tokenize "12" `shouldBe` Right [TokConst 1 12, TokEnd 2]
     it "can parse floats" $ do
       tokenize "12.3" `shouldBe` Right [TokConst 1 12.3, TokEnd 4]
+    it "errors on malformed floats" $ do
+      tokenize ".0" `shouldBe` Left [Error "Unexpected symbol '.'" 1]
+      tokenize "0." `shouldBe` Left [Error "Unexpected symbol '.'" 2]
+      tokenize "0.0.1" `shouldBe` Left [Error "Unexpected symbol '.'" 4]
     it "can parse variables" $ do
       tokenize "a" `shouldBe` Right [TokVar 1 "a", TokEnd 1]
       tokenize "aLongVariable" `shouldBe` Right [TokVar 1 "aLongVariable"
