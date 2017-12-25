@@ -13,7 +13,7 @@ import Tokenizer (Token (..), ParenType (..), OpType (..))
 
 {-|
   The 'checkParenParity' function checks whether all parens in the
-  input sequence are paired. If there are unpaired parens, the 
+  input sequence are paired. If there are unpaired parens, the
   function will return the list of errors, otherwise the input sequence
 -}
 checkParenParity :: [Token] -> Either [Error] [Token]
@@ -22,7 +22,7 @@ checkParenParity tokens = case check tokens newStack [] of
   errorTokens -> Left $ map toError errorTokens
   where
     check :: [Token] -> Stack Token -> [Token] -> [Token]
-    check [] stack errorTokens = 
+    check [] stack errorTokens =
       if isEmpty stack then errorTokens' else errorTokens' ++ toList stack
       where errorTokens' = reverse errorTokens
     check (t:ts) stack errorTokens = case t of
@@ -33,7 +33,7 @@ checkParenParity tokens = case check tokens newStack [] of
       _ -> check ts stack errorTokens
 
     toError :: Token -> Error
-    toError (TokParen pos paren) = 
+    toError (TokParen pos paren) =
       Error (printf "Unpaired paren %s" (show paren)) pos
 
 {-
@@ -99,7 +99,7 @@ checkTokenOrder :: [Token] -> Either [Error] [Token]
 checkTokenOrder tokens = case check SBegin tokens [] of
   [] -> Right tokens
   errors -> Left $ reverse errors
-  where 
+  where
     check :: CheckerState -> [Token] -> [Error] -> [Error]
     check _ [] errors = errors
     check state (t:ts) errors = case accept state t of
@@ -128,7 +128,7 @@ checkTokenOrder tokens = case check SBegin tokens [] of
     accept SOperator (TokParen _ LParen) = (SLparen, Nothing)
     accept SOperator (TokConst _ _) = (SNum, Nothing)
     accept SOperator (TokVar _ _) = (SNum, Nothing)
-    accept SOperator t = (SOperator, Just $ unexpectedToken t)    
+    accept SOperator t = (SOperator, Just $ unexpectedToken t)
     accept SRparen (TokOp _ _) = (SOperator, Nothing)
     accept SRparen (TokEnd _) = (SEnd, Nothing)
     accept SRparen t = (SRparen, Just $ unexpectedToken t)

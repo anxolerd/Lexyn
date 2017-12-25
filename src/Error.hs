@@ -20,6 +20,6 @@ instance Show Error where
  -     ^
  -}
 formatErrorMessage :: String -> Error -> String
-formatErrorMessage text (Error msg pos) = 
+formatErrorMessage text (Error msg pos) =
   printf "%s at position %d\n%s\n%s" msg pos text pointer
   where pointer = replicate (pos - 1) ' ' ++ "^"

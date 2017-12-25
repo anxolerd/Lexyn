@@ -3,6 +3,7 @@ module Tokenizer (
   OpType (Add, Subtract, Multiply, Divide),
   ParenType(LParen, RParen),
   Token(TokOp, TokParen, TokConst, TokVar, TokEnd),
+  tokenPos,
   tokenize,
 ) where
 import Data.Char (isSpace, isAlpha, isAlphaNum, isDigit)
@@ -41,6 +42,13 @@ data Token = TokOp Position OpType
            | TokVar Position String
            | TokEnd Position -- Synthetic token
   deriving (Eq)
+
+tokenPos :: Token -> Position
+tokenPos (TokOp pos _) = pos
+tokenPos (TokParen pos _) = pos
+tokenPos (TokConst pos _) = pos
+tokenPos (TokVar pos _) = pos
+tokenPos (TokEnd pos) = pos
 
 fmtToken :: String -> String -> Position -> String
 fmtToken = printf "<%s %s at %d>"
